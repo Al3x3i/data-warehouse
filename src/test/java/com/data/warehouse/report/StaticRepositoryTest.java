@@ -1,7 +1,5 @@
-package com.data.warehouse;
+package com.data.warehouse.report;
 
-import com.data.warehouse.report.Statistic;
-import com.data.warehouse.report.StatisticRepository;
 import java.time.LocalDate;
 import java.util.stream.IntStream;
 import org.junit.Test;
