@@ -1,23 +1,25 @@
 package com.data.warehouse;
 
+import com.data.warehouse.report.Statistic;
+import com.data.warehouse.report.StatisticRepository;
 import java.time.LocalDate;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class StaticRepositoryTest {
 
     @Autowired
     private StatisticRepository statisticRepository;
 
     @Test
-    public void test(){
+    public void test() {
 
         // Then
         var statistic = Statistic.builder()

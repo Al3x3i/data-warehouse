@@ -1,4 +1,4 @@
-package com.data.warehouse;
+package com.data.warehouse.report;
 
 import java.time.LocalDate;
 import javax.persistence.Column;

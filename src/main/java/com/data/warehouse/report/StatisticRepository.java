@@ -1,4 +1,4 @@
-package com.data.warehouse;
+package com.data.warehouse.report;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
