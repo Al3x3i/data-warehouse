@@ -1,21 +1,21 @@
 package com.data.warehouse.report;
 
 import java.time.LocalDate;
-import java.util.stream.IntStream;
+import lombok.Getter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class StaticRepositoryTest {
+public class StaticRepositoryTest implements StaticFixtureTrait {
 
     @Autowired
+    @Getter
     private StatisticRepository statisticRepository;
 
     @Test
@@ -49,29 +49,5 @@ public class StaticRepositoryTest {
 
         // Then
         then(totalClicks).isEqualTo(100);
-    }
-
-    private void givenTenGoogleAdsStatistics() {
-        var statistics = IntStream.range(0, 10).mapToObj(index ->
-                Statistic.builder()
-                        .dataSource("Google Ads")
-                        .campaign("Adventmarkt Touristik")
-                        .date(LocalDate.parse("2019-10-13"))
-                        .clicks(10)
-                        .impressions(22425)
-                        .build()).collect(toList());
-        statisticRepository.saveAll(statistics);
-    }
-
-    private void givenTenFacebookAdsStatistics() {
-        var statistics = IntStream.range(0, 10).mapToObj(index ->
-                Statistic.builder()
-                        .dataSource("Facebook Ads")
-                        .campaign("Adventmarkt Touristik")
-                        .date(LocalDate.parse("2019-10-13"))
-                        .clicks(10)
-                        .impressions(22425)
-                        .build()).collect(toList());
-        statisticRepository.saveAll(statistics);
     }
 }

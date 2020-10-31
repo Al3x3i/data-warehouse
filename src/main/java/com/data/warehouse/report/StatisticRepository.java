@@ -9,7 +9,12 @@ public interface StatisticRepository extends JpaRepository<Statistic, UUID> {
 
     @Query("SELECT SUM(clicks) " +
             "FROM Statistic " +
-            "WHERE DAILY BETWEEN :startDate AND :endDate AND DATA_SOURCE = :dataSource")
+            "WHERE DATA_SOURCE = :dataSource AND DAILY BETWEEN :startDate AND :endDate")
     long findSumTotalClicks(String dataSource, LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT SUM(clicks) " +
+            "FROM Statistic " +
+            "WHERE DAILY BETWEEN :startDate AND :endDate")
+    long findSumTotalClicks(LocalDate startDate, LocalDate endDate);
 
 }
