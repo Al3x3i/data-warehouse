@@ -23,9 +23,9 @@ public class ReportIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    StatisticRepository statisticRepository;
+    private StatisticRepository statisticRepository;
 
-    ResultActions resultActions;
+    private ResultActions resultActions;
 
     @Test
     @SneakyThrows

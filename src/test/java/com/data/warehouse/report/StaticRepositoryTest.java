@@ -21,7 +21,7 @@ public class StaticRepositoryTest {
     @Test
     public void should_create_statistic_record() {
 
-        // Then
+        // Given
         var statistic = Statistic.builder()
                 .dataSource("Google Ads")
                 .campaign("Adventmarkt Touristik")
@@ -40,7 +40,7 @@ public class StaticRepositoryTest {
     @Test
     public void should_get_total_clicks_by_data_source_date_range() {
 
-        // Then
+        // Given
         givenTenGoogleAdsStatistics();
         givenTenFacebookAdsStatistics();
 

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CSVService {
 
-    static DateTimeFormatter dailyFormatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+    private static DateTimeFormatter dailyFormatter = DateTimeFormatter.ofPattern("MM/dd/yy");
 
     @Autowired
     private StatisticRepository statisticRepository;

@@ -26,15 +26,15 @@ public class CsvIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    StatisticRepository statisticRepository;
+    private StatisticRepository statisticRepository;
 
-    ResultActions resultActions;
+    private ResultActions resultActions;
 
     private static final String CSV_PATH = "src/test/resources/PIxSyyrIKFORrCXfMYqZBI.csv";
 
     @Test
     @SneakyThrows
-    public void should_upload_csv_to_database() throws Exception {
+    public void should_upload_csv_to_database() {
 
         // Given
         FileInputStream fis = new FileInputStream(CSV_PATH);
