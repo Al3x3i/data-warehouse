@@ -34,7 +34,7 @@ public class CsvIntegrationTest {
 
     @Test
     @SneakyThrows
-    public void shouldUploadCsvData() throws Exception {
+    public void should_upload_csv_to_database() throws Exception {
 
         // Given
         FileInputStream fis = new FileInputStream(CSV_PATH);

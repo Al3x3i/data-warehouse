@@ -6,12 +6,12 @@ import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@SpringBootTest
+@DataJpaTest
 @RunWith(SpringRunner.class)
 public class StaticRepositoryTest {
 
@@ -19,7 +19,7 @@ public class StaticRepositoryTest {
     private StatisticRepository statisticRepository;
 
     @Test
-    public void test() {
+    public void test_create_statistic_record() {
 
         // Then
         var statistic = Statistic.builder()

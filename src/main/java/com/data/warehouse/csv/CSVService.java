@@ -5,6 +5,8 @@ import com.data.warehouse.report.StatisticRepository;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +15,11 @@ import org.apache.commons.csv.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static java.time.LocalDate.now;
-
 @Service
 @Slf4j
 public class CSVService {
+
+    static DateTimeFormatter dailyFormatter = DateTimeFormatter.ofPattern("MM/dd/yy");
 
     @Autowired
     private StatisticRepository statisticRepository;
@@ -39,7 +41,7 @@ public class CSVService {
             List<Statistic> statistics = csvParser.getRecords().stream().map(csvRecord -> Statistic.builder()
                     .dataSource(csvRecord.get("Datasource"))
                     .campaign(csvRecord.get("Campaign"))
-                    .date(now()) //TODO
+                    .date(formatDailyDate(csvRecord.get("Daily")))
                     .clicks(Integer.valueOf(csvRecord.get("Clicks")))
                     .impressions(Integer.valueOf(csvRecord.get("Impressions")))
                     .build()).collect(Collectors.toList());
@@ -49,5 +51,9 @@ public class CSVService {
         } catch (Exception ex) {
             throw new RuntimeException("Error occurred while loading csv data: " + ex.getMessage());
         }
+    }
+
+    private static LocalDate formatDailyDate(String date) {
+        return LocalDate.parse(date, dailyFormatter);
     }
 }
