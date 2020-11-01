@@ -39,9 +39,9 @@ public class CSVService {
                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 
             List<Statistic> statistics = csvParser.getRecords().stream().map(csvRecord -> Statistic.builder()
-                    .dataSource(csvRecord.get("Datasource"))
+                    .datasource(csvRecord.get("Datasource"))
                     .campaign(csvRecord.get("Campaign"))
-                    .date(formatDailyDate(csvRecord.get("Daily")))
+                    .daily(formatDailyDate(csvRecord.get("Daily")))
                     .clicks(Integer.valueOf(csvRecord.get("Clicks")))
                     .impressions(Integer.valueOf(csvRecord.get("Impressions")))
                     .build()).collect(Collectors.toList());

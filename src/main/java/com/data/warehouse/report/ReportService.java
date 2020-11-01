@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,8 +14,6 @@ import javax.persistence.criteria.Selection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
@@ -30,12 +28,9 @@ public class ReportService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final Map<String, String> ALLOWED_REGULAR_DIMENSIONS = Map.of(
-            "Campaign", "campaign",
-            "Datasource", "dataSource"
-    );
+    private static final List<String> ALLOWED_METRICS = List.of("clicks", "ctr", "impressions");
 
-    private static final List<String> ALLOWED_METRICS = List.of("Clicks", "CTR", "Impressions");
+    private static final List<String> ALLOWED_DIMENSIONS = List.of("campaign", "datasource", "daily");
 
 
     public void getStatistics(WarehouseReportRequest request) {
@@ -44,42 +39,59 @@ public class ReportService {
     }
 
     public ReportResult handleRequest(Set<String> metrics, Set<String> dimension, LocalDate startDate, LocalDate endDate) {
+
+        // Builder
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ReportResult> criteriaQuery = builder.createQuery(ReportResult.class);
+        CriteriaQuery<Tuple> criteriaQuery = builder.createTupleQuery();
         Root<Statistic> root = criteriaQuery.from(Statistic.class);
 
         // Append `Select`, `Group by`
-        setRegularDimensionsToQuery(criteriaQuery, root, dimension);
+        setSelectStatement(criteriaQuery, builder, root, metrics, dimension);
 
         // Append `Where`
-        setTimeDimension(criteriaQuery, builder, root, startDate, endDate);
+        setWhereStatement(criteriaQuery, builder, root, startDate, endDate);
 
-        List<ReportResult> result = entityManager.createQuery(criteriaQuery).getResultList();
+        // Request
+        List<Tuple> result = entityManager.createQuery(criteriaQuery).getResultList();
+
+        // TODO parse result
 
         return null;
     }
 
-    private void setTimeDimension(CriteriaQuery criteriaQuery, CriteriaBuilder builder, Root<Statistic> root,
-                                  LocalDate startDate, LocalDate endDate) {
-        criteriaQuery.where(builder.between(root.get("date"), startDate, endDate));
+    private void setWhereStatement(CriteriaQuery criteriaQuery, CriteriaBuilder builder, Root<Statistic> root,
+                                   LocalDate startDate, LocalDate endDate) {
+        criteriaQuery.where(builder.between(root.get("daily"), startDate, endDate));
     }
 
-    private void setRegularDimensionsToQuery(CriteriaQuery criteriaQuery, Root<Statistic> root, Set<String> dimensions) {
-        List<Selection> validMetrics = new ArrayList();
+    private void setSelectStatement(CriteriaQuery criteriaQuery, CriteriaBuilder builder, Root<Statistic> root,
+                                    Set<String> metrics, Set<String> dimensions) {
+        List<Selection> validSelections = new ArrayList();
+
         for (String dimensionName : dimensions) {
-            String fieldName = ALLOWED_REGULAR_DIMENSIONS.get(dimensionName);
-            if (isNull(fieldName)) {
-                log.debug("Invalid requested dimension name: '{}'", dimensionName);
+            if (ALLOWED_DIMENSIONS.contains(dimensionName)) {
+                validSelections.add(root.get(dimensionName).alias(dimensionName));
             } else {
-                validMetrics.add(root.get(fieldName).alias(dimensionName));
+                log.debug("Invalid requested dimension name: '{}'", dimensionName);
             }
         }
-        List<Selection> selectColumns = new ArrayList<>(validMetrics);
+
+        List<Selection> selections = new ArrayList<>(validSelections);
+
+        setSelectMetricAggregation(metrics, selections, builder, root);
 
         // Append Select columns + aggregations
-        criteriaQuery.multiselect(selectColumns);
-
+        criteriaQuery.multiselect(selections);
         // Append Group by columns
-        criteriaQuery.groupBy(validMetrics);
+        criteriaQuery.groupBy(validSelections);
+    }
+
+    private void setSelectMetricAggregation(Set<String> metrics, List<Selection> selections, CriteriaBuilder builder, Root<Statistic> root) {
+        for (String metric : metrics) {
+            if (metric.equals("clicks")) {
+                Selection totalClicks = builder.sum(root.get("clicks"));
+                selections.add(totalClicks);
+            }
+        }
     }
 }

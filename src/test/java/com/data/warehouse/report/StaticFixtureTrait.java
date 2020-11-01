@@ -12,9 +12,9 @@ public interface StaticFixtureTrait {
     default void givenTenGoogleAdsStatistics() {
         var statistics = IntStream.range(0, 10).mapToObj(index ->
                 Statistic.builder()
-                        .dataSource("Google Ads")
+                        .datasource("Google Ads")
                         .campaign("Google Touristik")
-                        .date(LocalDate.parse("2019-10-13"))
+                        .daily(LocalDate.parse("2019-10-13"))
                         .clicks(10)
                         .impressions(20)
                         .build()).collect(toList());
@@ -24,9 +24,9 @@ public interface StaticFixtureTrait {
     default void givenTenFacebookAdsStatistics() {
         var statistics = IntStream.range(0, 10).mapToObj(index ->
                 Statistic.builder()
-                        .dataSource("Facebook Ads")
+                        .datasource("Facebook Ads")
                         .campaign("Facebook Touristik")
-                        .date(LocalDate.parse("2019-10-13"))
+                        .daily(LocalDate.parse("2019-10-13"))
                         .clicks(10)
                         .impressions(30)
                         .build()).collect(toList());
@@ -36,9 +36,9 @@ public interface StaticFixtureTrait {
     default void givenTenTwitterAdsStatistics() {
         var statistics = IntStream.range(0, 10).mapToObj(index ->
                 Statistic.builder()
-                        .dataSource("Twitter Ads")
+                        .datasource("Twitter Ads")
                         .campaign("Twitter Touristik")
-                        .date(LocalDate.parse("2019-10-13"))
+                        .daily(LocalDate.parse("2019-10-13"))
                         .clicks(10)
                         .impressions(40)
                         .build()).collect(toList());

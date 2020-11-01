@@ -14,13 +14,13 @@ import lombok.Getter;
 public class Statistic extends AbstractEntity {
 
     @Column(name = "DATA_SOURCE", nullable = false)
-    private String dataSource;
+    private String datasource;
 
     @Column(name = "CAMPAIGN", nullable = false)
     private String campaign;
 
     @Column(name = "DAILY", nullable = false)
-    private LocalDate date;
+    private LocalDate daily;
 
     @Column(name = "CLICKS", nullable = false)
     private Integer clicks;

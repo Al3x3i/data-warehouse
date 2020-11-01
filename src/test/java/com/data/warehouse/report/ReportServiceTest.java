@@ -29,9 +29,9 @@ public class ReportServiceTest implements StaticFixtureTrait {
 
         // Given
         var statistic = Statistic.builder()
-                .dataSource("Google Ads")
+                .datasource("Google Ads")
                 .campaign("Adventmarkt Touristik")
-                .date(LocalDate.now())
+                .daily(LocalDate.now())
                 .clicks(7)
                 .impressions(22425)
                 .build();
@@ -51,13 +51,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenFacebookAdsStatistics();
         givenTenTwitterAdsStatistics();
 
-        Set<String> dimension = Set.of("Datasource", "Campaign");
-        Set<String> metrics = Set.of("Clicks", "CTR");
+        Set<String> dimension = Set.of("datasource", "campaign", "daily");
+        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
 
         // When
         ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2019-10-13"), LocalDate.parse("2019-10-13"));
 
         // Then
+        then(reportResult.getStatistics().get(0).getDaily()).isNotNull();
         then(reportResult.getStatistics().get(0).getCampaign()).isNotNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNotNull();
         then(reportResult.getStatistics().get(0).getCtr()).isNotNull();
@@ -74,12 +75,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenTwitterAdsStatistics();
 
         Set<String> dimension = Set.of();
-        Set<String> metrics = Set.of("Clicks", "CTR");
+        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
 
         // When
         ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2019-10-13"), LocalDate.parse("2019-10-13"));
 
         // Then
+        then(reportResult.getStatistics().size()).isEqualTo(1);
+        then(reportResult.getStatistics().get(0).getDaily()).isNull();
         then(reportResult.getStatistics().get(0).getCampaign()).isNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNull();
         then(reportResult.getStatistics().get(0).getCtr()).isNotNull();
