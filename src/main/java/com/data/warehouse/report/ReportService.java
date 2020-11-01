@@ -34,16 +34,9 @@ public class ReportService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final List<String> ALLOWED_METRICS = List.of("clicks", "ctr", "impressions");
+    static final List<String> ALLOWED_METRICS = List.of("clicks", "ctr", "impressions");
 
-    private static final List<String> ALLOWED_DIMENSIONS = List.of("campaign", "datasource", "daily");
-
-
-    public void getStatistics(WarehouseReportRequest request) {
-
-        // TODO
-//        statisticRepository.findSumTotalClicks(request.startDate, request.endDate);
-    }
+    static final List<String> ALLOWED_DIMENSIONS = List.of("campaign", "datasource", "daily");
 
     public ReportResult handleRequest(Set<String> metrics, Set<String> dimension, LocalDate startDate, LocalDate endDate) {
 

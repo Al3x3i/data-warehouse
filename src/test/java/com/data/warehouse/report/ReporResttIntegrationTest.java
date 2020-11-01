@@ -2,6 +2,7 @@ package com.data.warehouse.report;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.util.Set;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.Test;
@@ -15,12 +16,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class ReportIntegrationTest implements StaticFixtureTrait {
+public class ReporResttIntegrationTest implements StaticFixtureTrait {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +40,7 @@ public class ReportIntegrationTest implements StaticFixtureTrait {
 
     @Test
     @SneakyThrows
-    public void should_upload_csv_to_database() {
+    public void should_get_report_with_all_metrics_and_dimensions() {
 
         // Given
         givenTenFacebookAdsStatistics();
@@ -52,13 +54,23 @@ public class ReportIntegrationTest implements StaticFixtureTrait {
         );
 
         // Then
-        resultActions.andDo(print()).andExpect(status().isOk());
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("statistics[*].daily").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].campaign").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].dataSource").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].totalClicks").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].ctr").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].impressions").isNotEmpty());
     }
 
     private void givenWarehouseReportRequest() {
         reportRequest = WarehouseReportRequest.builder()
                 .startDate(LocalDate.parse("2019-10-13"))
                 .endDate(LocalDate.parse("2019-10-13"))
+                .dimensions(Set.of("datasource", "campaign", "daily"))
+                .metrics(Set.of("clicks", "ctr", "impressions"))
                 .build();
     }
 }
