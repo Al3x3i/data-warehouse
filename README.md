@@ -6,6 +6,14 @@ Simple Data Warehouse (extract, transform, load, query)
 ./gradlew build
 ```
 
+### Run 
+```
+$ ./gradlew build
+```
+After running the application, the database will be empty.
+
+Please upload CSV (is attached to this project `PIxSyyrIKFORrCXfMYqZBI.csv`) before using API end-points 
+
 ### Generate API documentation
 ```
 $ ./gradlew asciidoctor
