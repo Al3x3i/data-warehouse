@@ -32,7 +32,7 @@ public class ReportResult {
         private String dataSource;
 
         @JsonInclude(Include.NON_NULL)
-        private String totalClicks;
+        private String clicks;
 
         @JsonInclude(Include.NON_NULL)
         private String ctr;

@@ -93,7 +93,7 @@ public class ReportService {
                         statisticResponse.setCampaign(tuple.get(column).toString());
                         break;
                     case "totalClicks":
-                        statisticResponse.setTotalClicks(tuple.get(column).toString());
+                        statisticResponse.setClicks(tuple.get(column).toString());
                         break;
                     case "ctr":
                         statisticResponse.setCtr(tuple.get(column).toString());

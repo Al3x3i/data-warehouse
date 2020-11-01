@@ -70,7 +70,7 @@ public class ReportServiceTest implements StaticFixtureTrait {
         then(reportResult.getStatistics().get(0).getCampaign()).isNotNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNotNull();
         then(reportResult.getStatistics().get(0).getCtr()).startsWith("33.33");
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("100");
+        then(reportResult.getStatistics().get(0).getClicks()).isEqualTo("100");
         then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("300");
     }
 
@@ -94,7 +94,7 @@ public class ReportServiceTest implements StaticFixtureTrait {
         then(reportResult.getStatistics().get(0).getCampaign()).isNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNull();
         then(reportResult.getStatistics().get(0).getCtr()).startsWith("33.33");
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("300");
+        then(reportResult.getStatistics().get(0).getClicks()).isEqualTo("300");
         then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("900");
     }
 
@@ -117,7 +117,7 @@ public class ReportServiceTest implements StaticFixtureTrait {
         then(reportResult.getStatistics().get(0).getCampaign()).isNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNull();
         then(reportResult.getStatistics().get(0).getCtr()).isEqualTo("50.0");
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("100");
+        then(reportResult.getStatistics().get(0).getClicks()).isEqualTo("100");
         then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("200");
     }
 
@@ -141,7 +141,7 @@ public class ReportServiceTest implements StaticFixtureTrait {
         then(reportResult.getStatistics().get(0).getCampaign()).isNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNull();
         then(reportResult.getStatistics().get(0).getCtr()).isNull();
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("300");
+        then(reportResult.getStatistics().get(0).getClicks()).isEqualTo("300");
         then(reportResult.getStatistics().get(0).getImpressions()).isNull();
     }
 }

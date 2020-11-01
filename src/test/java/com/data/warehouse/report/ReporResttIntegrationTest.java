@@ -63,7 +63,7 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
                 .andExpect(jsonPath("statistics[*].daily").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].campaign").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].dataSource").isNotEmpty())
-                .andExpect(jsonPath("statistics[*].totalClicks").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].clicks").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].ctr").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].impressions").isNotEmpty());
 
@@ -95,7 +95,7 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
                 .andExpect(jsonPath("statistics[*].daily").doesNotExist())
                 .andExpect(jsonPath("statistics[*].campaign").doesNotExist())
                 .andExpect(jsonPath("statistics[*].dataSource").isNotEmpty())
-                .andExpect(jsonPath("statistics[*].totalClicks").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].clicks").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].ctr").doesNotExist())
                 .andExpect(jsonPath("statistics[*].impressions").doesNotExist());
     }
