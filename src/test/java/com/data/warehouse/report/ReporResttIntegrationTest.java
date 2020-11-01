@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,9 +79,19 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
                 .andExpect(jsonPath("statistics[*].ctr").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].impressions").isNotEmpty());
 
-
-        this.resultActions
-                .andDo(document("report-statistics"));
+        resultActions.andDo(
+                document("report-statistics",
+                        requestFields(
+                                fieldWithPath("startDate").description("The date from which the selected data will be selected."),
+                                fieldWithPath("endDate").description("The date from which the selected data will be selected."),
+                                fieldWithPath("dimensions").description("(Optional) Dimensions are the fields that can be used to analyze. Allowed dimensions: 'campaign', 'datasource', 'daily'").optional(),
+                                fieldWithPath("metrics").description("Metric is a number that is used to measure or aggregate data records. Allowed metrics: 'clicks', 'ctr', 'impressions'"),
+                                fieldWithPath("dimensionFilters[]").description("(Optional) A parameter by which Dimensions can be filtered. The filtered data will be excluded from report.").optional(),
+                                fieldWithPath("dimensionFilters[].dimension").description("The Dimension name"),
+                                fieldWithPath("dimensionFilters[].filter").description("The filter value")
+                        )
+                )
+        );
 
     }
 

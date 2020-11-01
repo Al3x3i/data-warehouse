@@ -13,7 +13,7 @@ A `POST` request to upload Statistic records. {empty} +
 After uploading the previous records will be deleted.
 
 :snippet_name: csv-upload
-:skip_response_body:
+:skip_request_body:
 
 include::templates/template-post.adoc[]
 
@@ -23,6 +23,5 @@ A `POST` request to upload Statistic records. {empty} +
 After uploading the previous records will be deleted.
 
 :snippet_name: report-statistics
-:skip_response_body:
 
 include::templates/template-post.adoc[]

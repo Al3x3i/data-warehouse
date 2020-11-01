@@ -2,6 +2,19 @@
 
 include::{snippets}/{snippet_name}/curl-request.adoc[]
 
+//start request body
+ifndef::skip_request_body[]
+*Request body properties*
+
+include::{snippets}/{snippet_name}/request-fields.adoc[]
+endif::skip_request_body[]
+
+//unset skip_request_body if it is defined
+ifdef::skip_request_body[]
+:skip_request_body!:
+endif::skip_request_body[]
+//end request body
+
 *Example response*
 
 include::{snippets}/{snippet_name}/http-response.adoc[]
