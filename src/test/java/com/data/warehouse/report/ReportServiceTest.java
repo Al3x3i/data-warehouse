@@ -3,16 +3,19 @@ package com.data.warehouse.report;
 import java.time.LocalDate;
 import java.util.Set;
 import lombok.Getter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-@SpringBootApplication
+@AutoConfigureMockMvc
 public class ReportServiceTest implements StaticFixtureTrait {
 
     @Autowired
@@ -23,6 +26,11 @@ public class ReportServiceTest implements StaticFixtureTrait {
     @Getter
     private ReportService reportService;
 
+
+    @Before
+    public void setup() {
+        statisticRepository.deleteAll();
+    }
 
     @Test
     public void should_create_statistic_record() {
@@ -55,15 +63,15 @@ public class ReportServiceTest implements StaticFixtureTrait {
         Set<String> metrics = Set.of("clicks", "ctr", "impressions");
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2019-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
 
         // Then
         then(reportResult.getStatistics().get(0).getDaily()).isNotNull();
         then(reportResult.getStatistics().get(0).getCampaign()).isNotNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNotNull();
-        then(reportResult.getStatistics().get(0).getCtr()).isNotNull();
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isNotNull();
-        then(reportResult.getStatistics().get(0).getImpressions()).isNotNull();
+        then(reportResult.getStatistics().get(0).getCtr()).startsWith("33.33");
+        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("100");
+        then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("300");
     }
 
     @Test
@@ -78,15 +86,15 @@ public class ReportServiceTest implements StaticFixtureTrait {
         Set<String> metrics = Set.of("clicks", "ctr", "impressions");
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2019-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
 
         // Then
         then(reportResult.getStatistics().size()).isEqualTo(1);
         then(reportResult.getStatistics().get(0).getDaily()).isNull();
         then(reportResult.getStatistics().get(0).getCampaign()).isNull();
         then(reportResult.getStatistics().get(0).getDataSource()).isNull();
-        then(reportResult.getStatistics().get(0).getCtr()).isNotNull();
-        then(reportResult.getStatistics().get(0).getTotalClicks()).isNotNull();
-        then(reportResult.getStatistics().get(0).getImpressions()).isNotNull();
+        then(reportResult.getStatistics().get(0).getCtr()).startsWith("33.33");
+        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("300");
+        then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("900");
     }
 }

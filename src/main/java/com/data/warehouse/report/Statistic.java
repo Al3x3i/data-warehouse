@@ -4,13 +4,17 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "STATISTIC")
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Statistic extends AbstractEntity {
 
     @Column(name = "DATA_SOURCE", nullable = false)
