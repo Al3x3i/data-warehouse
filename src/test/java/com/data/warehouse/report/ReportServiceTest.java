@@ -59,11 +59,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenFacebookAdsStatistics();
         givenTenTwitterAdsStatistics();
 
-        Set<String> dimension = Set.of("datasource", "campaign", "daily");
-        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
+        var request = WarehouseReportRequest.builder()
+                .dimensions(Set.of("datasource", "campaign", "daily"))
+                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .startDate(LocalDate.parse("2010-10-13"))
+                .endDate(LocalDate.parse("2019-10-13")).build();
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(request);
 
         // Then
         then(reportResult.getStatistics().get(0).getDaily()).isNotNull();
@@ -82,11 +85,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenFacebookAdsStatistics();
         givenTenTwitterAdsStatistics();
 
-        Set<String> dimension = Set.of();
-        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
+        var request = WarehouseReportRequest.builder()
+                .dimensions(Set.of())
+                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .startDate(LocalDate.parse("2010-10-13"))
+                .endDate(LocalDate.parse("2019-10-13")).build();
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(request);
 
         // Then
         then(reportResult.getStatistics().size()).isEqualTo(1);
@@ -105,11 +111,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenGoogleAdsStatistics("2019-10-12");
         givenTenGoogleAdsStatistics("2010-10-13");
 
-        Set<String> dimension = Set.of("daily");
-        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
+        var request = WarehouseReportRequest.builder()
+                .dimensions(Set.of("daily"))
+                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .startDate(LocalDate.parse("2010-10-13"))
+                .endDate(LocalDate.parse("2019-10-13")).build();
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(request);
 
         // Then
         then(reportResult.getStatistics().size()).isEqualTo(2);
@@ -129,11 +138,14 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenFacebookAdsStatistics();
         givenTenTwitterAdsStatistics();
 
-        Set<String> dimension = Set.of();
-        Set<String> metrics = Set.of("clicks");
+        var request = WarehouseReportRequest.builder()
+                .dimensions(Set.of())
+                .metrics(Set.of("clicks"))
+                .startDate(LocalDate.parse("2010-10-13"))
+                .endDate(LocalDate.parse("2019-10-13")).build();
 
         // When
-        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+        ReportResult reportResult = reportService.handleRequest(request);
 
         // Then
         then(reportResult.getStatistics().size()).isEqualTo(1);

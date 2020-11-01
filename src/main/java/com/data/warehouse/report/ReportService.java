@@ -1,6 +1,7 @@
 package com.data.warehouse.report;
 
 import com.data.warehouse.report.ReportResult.StatisticResponse;
+import com.data.warehouse.report.WarehouseReportRequest.DimensionFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,12 +14,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -38,7 +41,16 @@ public class ReportService {
 
     static final List<String> ALLOWED_DIMENSIONS = List.of("campaign", "datasource", "daily");
 
-    public ReportResult handleRequest(Set<String> metrics, Set<String> dimension, LocalDate startDate, LocalDate endDate) {
+    public ReportResult handleRequest(WarehouseReportRequest request) {
+
+        setDefaultFieldsIfMissing(request);
+
+        Set metrics = request.getMetrics();
+        Set dimension = request.getDimensions();
+        List dimensionFilters = request.getDimensionFilters();
+
+        LocalDate startDate = request.getStartDate();
+        LocalDate endDate = request.getEndDate();
 
         // Builder
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -50,7 +62,7 @@ public class ReportService {
         setSelectStatement(criteriaQuery, builder, root, metrics, dimension);
 
         // Append `Where`
-        setWhereStatement(criteriaQuery, builder, root, startDate, endDate);
+        setWhereStatement(criteriaQuery, builder, root, startDate, endDate, dimensionFilters);
 
         // Append 'Order`
         setOrderStatement(builder, criteriaQuery);
@@ -61,6 +73,15 @@ public class ReportService {
         // Mapping
         ReportResult reportResult = mapDatabaseResponseToReportResult(criteriaQuery, result);
         return reportResult;
+    }
+
+    private void setDefaultFieldsIfMissing(WarehouseReportRequest request) {
+        if (isNull(request.getDimensions())) {
+            request.setDimensions(Set.of());
+        }
+        if (isNull(request.getDimensionFilters())) {
+            request.setDimensionFilters(List.of());
+        }
     }
 
     private void setOrderStatement(CriteriaBuilder builder, CriteriaQuery<Tuple> criteriaQuery) {
@@ -87,22 +108,34 @@ public class ReportService {
 
                 switch (column) {
                     case "datasource":
-                        statisticResponse.setDataSource(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setDataSource(tuple.get(column).toString());
+                        }
                         break;
                     case "campaign":
-                        statisticResponse.setCampaign(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setCampaign(tuple.get(column).toString());
+                        }
                         break;
                     case "totalClicks":
-                        statisticResponse.setClicks(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setClicks(tuple.get(column).toString());
+                        }
                         break;
                     case "ctr":
-                        statisticResponse.setCtr(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setCtr(tuple.get(column).toString());
+                        }
                         break;
                     case "daily":
-                        statisticResponse.setDaily(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setDaily(tuple.get(column).toString());
+                        }
                         break;
                     case "impressions":
-                        statisticResponse.setImpressions(tuple.get(column).toString());
+                        if (!isNull(tuple.get(column))) {
+                            statisticResponse.setImpressions(tuple.get(column).toString());
+                        }
                         break;
                 }
             });
@@ -113,8 +146,21 @@ public class ReportService {
     }
 
     private void setWhereStatement(CriteriaQuery criteriaQuery, CriteriaBuilder builder, Root<Statistic> root,
-                                   LocalDate startDate, LocalDate endDate) {
-        criteriaQuery.where(builder.between(root.get("daily"), startDate, endDate));
+                                   LocalDate startDate, LocalDate endDate, List<DimensionFilter> dimensionFilters) {
+
+        List<Predicate> filterPredicates = new ArrayList<>();
+        dimensionFilters.stream().forEach(filterDimension -> {
+            var dimension = filterDimension.getDimension();
+            var filterValue = filterDimension.getFilter();
+
+            Expression expression = root.get(dimension);
+            Predicate predicate = builder.notEqual(expression, filterValue);
+            filterPredicates.add(predicate);
+        });
+
+        filterPredicates.add(builder.between(root.get("daily"), startDate, endDate));
+        Predicate[] p = filterPredicates.toArray(Predicate[]::new);
+        criteriaQuery.where(p);
     }
 
     private void setSelectStatement(CriteriaQuery criteriaQuery, CriteriaBuilder builder, Root<Statistic> root,

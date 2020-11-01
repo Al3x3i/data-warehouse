@@ -1,6 +1,7 @@
 package com.data.warehouse.report;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +10,20 @@ import lombok.Data;
 @Builder
 public class WarehouseReportRequest {
 
-    LocalDate startDate;
+    private LocalDate startDate;
 
-    LocalDate endDate;
+    private LocalDate endDate;
 
-    Set<String> dimensions;
+    private Set<String> dimensions;
 
-    Set<String> metrics;
+    private Set<String> metrics;
+
+    private List<DimensionFilter> dimensionFilters;
+
+    @Data
+    @Builder
+    public static class DimensionFilter {
+        private String dimension;
+        private String filter;
+    }
 }
