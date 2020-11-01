@@ -55,10 +55,7 @@ public class CsvRestIntegrationTest {
         then(statisticRepository.count()).isNotZero();
 
         resultActions.andDo(
-                document("create-todo-item"
-
-
-                )
+                document("csv-upload")
         );
     }
 }

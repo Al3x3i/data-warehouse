@@ -3,15 +3,26 @@
 :doctype: book
 :toc: left
 :toclevels: 3
+:source-highlighter: highlightjs
 
 :attribute-missing: info
 
 
 == Upload statistics
 A `POST` request to upload Statistic records. {empty} +
-After uploading the previous records will be deleted
+After uploading the previous records will be deleted.
 
-:snippet_name: create-todo-item
+:snippet_name: csv-upload
+:skip_response_body:
+
+include::templates/template-post.adoc[]
+
+
+== Report Statistics
+A `POST` request to upload Statistic records. {empty} +
+After uploading the previous records will be deleted.
+
+:snippet_name: report-statistics
 :skip_response_body:
 
 include::templates/template-post.adoc[]

@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "build/generated-snippets")
 public class ReporResttIntegrationTest implements StaticFixtureTrait {
 
     @Autowired
@@ -64,6 +66,11 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
                 .andExpect(jsonPath("statistics[*].totalClicks").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].ctr").isNotEmpty())
                 .andExpect(jsonPath("statistics[*].impressions").isNotEmpty());
+
+
+        this.resultActions
+                .andDo(document("report-statistics"));
+
     }
 
     @Test
