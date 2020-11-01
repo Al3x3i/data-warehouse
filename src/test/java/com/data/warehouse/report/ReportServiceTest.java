@@ -97,4 +97,51 @@ public class ReportServiceTest implements StaticFixtureTrait {
         then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("300");
         then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("900");
     }
+
+    @Test
+    public void should_get_report_result_for_impressions_metrics_and_daily_domain() {
+
+        // Given
+        givenTenGoogleAdsStatistics("2019-10-12");
+        givenTenGoogleAdsStatistics("2010-10-13");
+
+        Set<String> dimension = Set.of("daily");
+        Set<String> metrics = Set.of("clicks", "ctr", "impressions");
+
+        // When
+        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+
+        // Then
+        then(reportResult.getStatistics().size()).isEqualTo(2);
+        then(reportResult.getStatistics().get(0).getDaily()).isNotBlank();
+        then(reportResult.getStatistics().get(0).getCampaign()).isNull();
+        then(reportResult.getStatistics().get(0).getDataSource()).isNull();
+        then(reportResult.getStatistics().get(0).getCtr()).isEqualTo("50.0");
+        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("100");
+        then(reportResult.getStatistics().get(0).getImpressions()).isEqualTo("200");
+    }
+
+    @Test
+    public void should_get_report_result_for_ctr_metrics() {
+
+        // Given
+        givenTenGoogleAdsStatistics();
+        givenTenFacebookAdsStatistics();
+        givenTenTwitterAdsStatistics();
+
+        Set<String> dimension = Set.of();
+        Set<String> metrics = Set.of("clicks");
+
+        // When
+        ReportResult reportResult = reportService.handleRequest(metrics, dimension, LocalDate.parse("2010-10-13"), LocalDate.parse("2019-10-13"));
+
+        // Then
+        then(reportResult.getStatistics().size()).isEqualTo(1);
+        then(reportResult.getStatistics().get(0).getDaily()).isNull();
+        then(reportResult.getStatistics().get(0).getCampaign()).isNull();
+        then(reportResult.getStatistics().get(0).getDataSource()).isNull();
+        then(reportResult.getStatistics().get(0).getCtr()).isNull();
+        then(reportResult.getStatistics().get(0).getTotalClicks()).isEqualTo("300");
+        then(reportResult.getStatistics().get(0).getImpressions()).isNull();
+    }
 }

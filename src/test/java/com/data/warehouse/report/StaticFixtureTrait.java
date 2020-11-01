@@ -10,11 +10,15 @@ public interface StaticFixtureTrait {
     StatisticRepository getStatisticRepository();
 
     default void givenTenGoogleAdsStatistics() {
+        givenTenGoogleAdsStatistics("2019-10-13");
+    }
+
+    default void givenTenGoogleAdsStatistics(String date) {
         var statistics = IntStream.range(0, 10).mapToObj(index ->
                 Statistic.builder()
                         .datasource("Google Ads")
                         .campaign("Google Touristik")
-                        .daily(LocalDate.parse("2019-10-13"))
+                        .daily(LocalDate.parse(date))
                         .clicks(10)
                         .impressions(20)
                         .build()).collect(toList());
