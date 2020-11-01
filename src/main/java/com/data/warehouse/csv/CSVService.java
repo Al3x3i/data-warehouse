@@ -27,6 +27,8 @@ public class CSVService {
     public void loadData(InputStream csvInputStream) {
 
         List<Statistic> statistics = transformCsvToStatistic(csvInputStream);
+
+        statisticRepository.deleteAll();
         statisticRepository.saveAll(statistics);
 
         log.info("Loaded '{}' records from CSV file", statisticRepository.count());

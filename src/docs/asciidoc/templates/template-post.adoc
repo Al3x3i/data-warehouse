@@ -1,0 +1,7 @@
+*Example request*
+
+include::{snippets}/{snippet_name}/curl-request.adoc[]
+
+*Example response*
+
+include::{snippets}/{snippet_name}/http-response.adoc[]

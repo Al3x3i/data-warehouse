@@ -1,0 +1,17 @@
+
+= RESTful Data Warehouse API Specification
+:doctype: book
+:toc: left
+:toclevels: 3
+
+:attribute-missing: info
+
+
+== Upload statistics
+A `POST` request to upload Statistic records. {empty} +
+After uploading the previous records will be deleted
+
+:snippet_name: create-todo-item
+:skip_response_body:
+
+include::templates/template-post.adoc[]
