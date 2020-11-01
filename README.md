@@ -6,6 +6,16 @@ Simple Data Warehouse (extract, transform, load, query)
 ./gradlew build
 ```
 
+### Generate API documentation
+```
+$ ./gradlew asciidoctor
+```
+
+### API documentation
+```
+$ cd build/asciidoc/html5
+```
+
 ### Build Docker file
 ```
 $ docker build -t al3x3i/warehouse .
