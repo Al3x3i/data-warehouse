@@ -4,7 +4,6 @@ import com.data.warehouse.report.WarehouseReportRequest.DimensionFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.Test;
@@ -167,8 +166,8 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
         reportRequest = WarehouseReportRequest.builder()
                 .startDate(LocalDate.parse("2019-10-13"))
                 .endDate(LocalDate.parse("2019-10-13"))
-                .dimensions(Set.of("datasource", "campaign", "daily"))
-                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .dimensions(getLinkedHashSet("datasource", "campaign", "daily"))
+                .metrics(getLinkedHashSet("clicks", "ctr", "impressions"))
                 .build();
     }
 
@@ -176,8 +175,8 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
         reportRequest = WarehouseReportRequest.builder()
                 .startDate(LocalDate.parse("2019-10-13"))
                 .endDate(LocalDate.parse("2019-10-13"))
-                .dimensions(Set.of("datasource"))
-                .metrics(Set.of("clicks"))
+                .dimensions(getLinkedHashSet("datasource"))
+                .metrics(getLinkedHashSet("clicks"))
                 .build();
     }
 
@@ -185,8 +184,8 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
         reportRequest = WarehouseReportRequest.builder()
                 .startDate(LocalDate.parse("2019-10-13"))
                 .endDate(LocalDate.parse("2019-10-13"))
-                .dimensions(Set.of("test"))
-                .metrics(Set.of("test"))
+                .dimensions(getLinkedHashSet("test"))
+                .metrics(getLinkedHashSet("test"))
                 .build();
     }
 }

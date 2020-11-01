@@ -1,13 +1,20 @@
 package com.data.warehouse.report;
 
 import java.time.LocalDate;
-import java.util.stream.IntStream;
+import java.util.LinkedHashSet;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.Arrays.stream;
 
 public interface StaticFixtureTrait {
 
     StatisticRepository getStatisticRepository();
+
+
+    default LinkedHashSet getLinkedHashSet(String... values) {
+        var linkedHashSet = new LinkedHashSet<>();
+        stream(values).forEach(linkedHashSet::add);
+        return linkedHashSet;
+    }
 
     default void givenTenGoogleAdsStatistics() {
         givenTenGoogleAdsStatistics("2019-10-13");

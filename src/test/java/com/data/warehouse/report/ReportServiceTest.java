@@ -1,7 +1,6 @@
 package com.data.warehouse.report;
 
 import java.time.LocalDate;
-import java.util.Set;
 import lombok.Getter;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,8 +59,8 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenTwitterAdsStatistics();
 
         var request = WarehouseReportRequest.builder()
-                .dimensions(Set.of("datasource", "campaign", "daily"))
-                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .dimensions(getLinkedHashSet("datasource", "campaign", "daily"))
+                .metrics(getLinkedHashSet("clicks", "ctr", "impressions"))
                 .startDate(LocalDate.parse("2010-10-13"))
                 .endDate(LocalDate.parse("2019-10-13")).build();
 
@@ -86,8 +85,8 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenTwitterAdsStatistics();
 
         var request = WarehouseReportRequest.builder()
-                .dimensions(Set.of())
-                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .dimensions(getLinkedHashSet())
+                .metrics(getLinkedHashSet("clicks", "ctr", "impressions"))
                 .startDate(LocalDate.parse("2010-10-13"))
                 .endDate(LocalDate.parse("2019-10-13")).build();
 
@@ -112,8 +111,8 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenGoogleAdsStatistics("2010-10-13");
 
         var request = WarehouseReportRequest.builder()
-                .dimensions(Set.of("daily"))
-                .metrics(Set.of("clicks", "ctr", "impressions"))
+                .dimensions(getLinkedHashSet("daily"))
+                .metrics(getLinkedHashSet("clicks", "ctr", "impressions"))
                 .startDate(LocalDate.parse("2010-10-13"))
                 .endDate(LocalDate.parse("2019-10-13")).build();
 
@@ -139,8 +138,8 @@ public class ReportServiceTest implements StaticFixtureTrait {
         givenTenTwitterAdsStatistics();
 
         var request = WarehouseReportRequest.builder()
-                .dimensions(Set.of())
-                .metrics(Set.of("clicks"))
+                .dimensions(getLinkedHashSet())
+                .metrics(getLinkedHashSet("clicks"))
                 .startDate(LocalDate.parse("2010-10-13"))
                 .endDate(LocalDate.parse("2019-10-13")).build();
 

@@ -5,6 +5,7 @@ import com.data.warehouse.report.WarehouseReportRequest.DimensionFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
@@ -77,7 +78,7 @@ public class ReportService {
 
     private void setDefaultFieldsIfMissing(WarehouseReportRequest request) {
         if (isNull(request.getDimensions())) {
-            request.setDimensions(Set.of());
+            request.setDimensions(new LinkedHashSet<>());
         }
         if (isNull(request.getDimensionFilters())) {
             request.setDimensionFilters(List.of());

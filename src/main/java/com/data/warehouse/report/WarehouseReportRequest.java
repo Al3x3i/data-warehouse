@@ -1,8 +1,8 @@
 package com.data.warehouse.report;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,9 +14,9 @@ public class WarehouseReportRequest {
 
     private LocalDate endDate;
 
-    private Set<String> dimensions;
+    private LinkedHashSet<String> dimensions;
 
-    private Set<String> metrics;
+    private LinkedHashSet<String> metrics;
 
     private List<DimensionFilter> dimensionFilters;
 
