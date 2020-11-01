@@ -65,12 +65,77 @@ public class ReporResttIntegrationTest implements StaticFixtureTrait {
                 .andExpect(jsonPath("statistics[*].impressions").isNotEmpty());
     }
 
+    @Test
+    @SneakyThrows
+    public void should_get_report_with_one_dimension_and_metric() {
+
+        // Given
+        givenTenFacebookAdsStatistics();
+        givenTenGoogleAdsStatistics();
+        givenWarehouseReportRequestWithOneMetricAndDimension();
+
+        // When
+        resultActions = mockMvc.perform(post("/report")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(reportRequest))
+        );
+
+        // Then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("statistics[*].daily").doesNotExist())
+                .andExpect(jsonPath("statistics[*].campaign").doesNotExist())
+                .andExpect(jsonPath("statistics[*].dataSource").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].totalClicks").isNotEmpty())
+                .andExpect(jsonPath("statistics[*].ctr").doesNotExist())
+                .andExpect(jsonPath("statistics[*].impressions").doesNotExist());
+    }
+
+    @Test
+    @SneakyThrows
+    public void should_fail_to_get_report_for_invalid_dimension() {
+
+        // Given
+        givenInvalidWarehouseReportRequest();
+
+        // When
+        resultActions = mockMvc.perform(post("/report")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(reportRequest))
+        );
+
+        // Then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
     private void givenWarehouseReportRequest() {
         reportRequest = WarehouseReportRequest.builder()
                 .startDate(LocalDate.parse("2019-10-13"))
                 .endDate(LocalDate.parse("2019-10-13"))
                 .dimensions(Set.of("datasource", "campaign", "daily"))
                 .metrics(Set.of("clicks", "ctr", "impressions"))
+                .build();
+    }
+
+    private void givenWarehouseReportRequestWithOneMetricAndDimension() {
+        reportRequest = WarehouseReportRequest.builder()
+                .startDate(LocalDate.parse("2019-10-13"))
+                .endDate(LocalDate.parse("2019-10-13"))
+                .dimensions(Set.of("datasource"))
+                .metrics(Set.of("clicks"))
+                .build();
+    }
+
+    private void givenInvalidWarehouseReportRequest() {
+        reportRequest = WarehouseReportRequest.builder()
+                .startDate(LocalDate.parse("2019-10-13"))
+                .endDate(LocalDate.parse("2019-10-13"))
+                .dimensions(Set.of("test"))
+                .metrics(Set.of("test"))
                 .build();
     }
 }
