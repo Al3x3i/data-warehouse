@@ -8,7 +8,7 @@ Simple Data Warehouse (extract, transform, load, query)
 
 ### Run 
 ```
-$ ./gradlew build
+$ ./gradlew bootrun
 ```
 After running the application, the database will be empty.
 
